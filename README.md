@@ -1,4 +1,4 @@
-# Projeto T.inder (Clone Simples)
+# Projeto T.inder
 
 Este é um projeto de estudo para Android nativo, desenvolvido com o objetivo de aprender e aplicar os conceitos fundamentais do Jetpack Compose. O aplicativo é um clone visual simples da interface de um aplicativo de relacionamentos, como o Tinder.
 
