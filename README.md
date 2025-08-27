@@ -35,11 +35,3 @@ Para manter a simplicidade e focar nos conceitos de UI do Jetpack Compose, todo 
 A navegação entre as telas é controlada por uma variável de estado (`var telaAtual`) que armazena um número (`Int`) para identificar a tela ativa. Uma estrutura `when` renderiza o Composable correspondente à tela atual.
 
 Para um projeto de produção, a estrutura ideal seria separar cada tela em seu próprio arquivo, utilizar a biblioteca `Navigation Compose` e adotar um padrão de arquitetura como o MVVM (Model-View-ViewModel).
-
-## 🔮 Próximos Passos (Possíveis Melhorias)
-
-- [ ] Refatorar o código, separando cada tela em seu próprio arquivo `.kt`.
-- [ ] Substituir a navegação baseada em estado por `Navigation Compose`.
-- [ ] Implementar a funcionalidade de "arrastar" (swipe) na tela principal.
-- [ ] Adotar a arquitetura MVVM com `ViewModel` para gerenciar o estado das telas.
-- [ ] Conectar o app a uma API para buscar dados de perfis reais.
