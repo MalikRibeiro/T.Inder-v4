@@ -2,12 +2,6 @@
 
 Este é um projeto de estudo para Android nativo, desenvolvido com o objetivo de aprender e aplicar os conceitos fundamentais do Jetpack Compose. O aplicativo é um clone visual simples da interface de um aplicativo de relacionamentos, como o Tinder.
 
-## 📱 Screenshots
-
-| Tela de Login | Tela Principal | Tela de Matches |
-| :-----------: | :--------------: | :---------------: |
-| <img src="caminho/para/sua/screenshot_login.png" width="200"> | <img src="caminho/para/sua/screenshot_main.png" width="200"> | <img src="caminho/para/sua/screenshot_matches.png" width="200"> |
-
 *(**Nota:** Substitua os caminhos acima pelas suas próprias screenshots para exibir o resultado final do app.)*
 
 ## ✨ Funcionalidades
