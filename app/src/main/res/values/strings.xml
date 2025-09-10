@@ -2,4 +2,8 @@
     <string name="app_name">Tinder</string>
     <string name="title_activity_main2">MainActivity2</string>
     <string name="title_activity_main3">MainActivity3</string>
+    <string name="title_activity_main4">MainActivity4</string>
+    <string name="title_activity_navigation_activity.kt">NavigationActivity.kt</string>
+    <string name="title_activity_navigate">NavigateActivity</string>
+    <string name="title_activity_app_navigation">AppNavigation</string>
 </resources>

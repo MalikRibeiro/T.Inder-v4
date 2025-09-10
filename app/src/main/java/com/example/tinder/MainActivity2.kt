@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.tinder.ui.theme.TinderTheme
 
 class MainActivity2 : ComponentActivity() {
@@ -35,14 +36,13 @@ class MainActivity2 : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TinderTheme {
-                TelaPrincipal()
             }
         }
     }
 }
 
 @Composable
-fun TelaPrincipal() {
+fun TelaPrincipal(onClickMatches: () -> Unit) {
     val context = LocalContext.current
 
     Column(
@@ -65,10 +65,8 @@ fun TelaPrincipal() {
             Text("T.inder", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
-                onClick = {
-                    val intent = Intent(context, MainActivity3::class.java)
-                    context.startActivity(intent)
-                })
+                onClick = onClickMatches
+            )
             {
                 Text(text = "Matches")
             }

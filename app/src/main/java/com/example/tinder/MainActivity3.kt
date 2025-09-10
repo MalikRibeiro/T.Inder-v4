@@ -38,16 +38,13 @@ class MainActivity3 : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TinderTheme {
-                TelaMatches()
                 }
             }
         }
     }
 
-
-@Preview
 @Composable
-fun TelaMatches() {
+fun TelaMatches(onClickVoltar: () -> Unit) {
     val matches =
         listOf("Paula Fernandes", "Ana Castela", "Giulia Be", "Marilia Mendonça", "Simone Mendes")
     val context = LocalContext.current
@@ -66,10 +63,7 @@ fun TelaMatches() {
             Text("Matches", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
-                onClick = {
-                    val intent = Intent(context, MainActivity2::class.java)
-                    context.startActivity(intent)
-                })
+                onClick = onClickVoltar)
             {
                 Text(text = "Voltar")
             }

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.tinder.ui.theme.TinderTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TinderTheme {
-                TelaLogin()
+                AppNavigation()
             }
         }
     }
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TelaLogin() {
+fun TelaLogin(onClickPrincipal: () -> Unit) {
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -69,10 +70,7 @@ fun TelaLogin() {
 
         Button(
             colors = ButtonDefaults.buttonColors(Color.Magenta),
-            onClick = {
-                val intent = Intent(context, MainActivity2::class.java)
-                context.startActivity(intent)
-            },
+            onClick = onClickPrincipal,
             modifier = Modifier.padding(top = 16.dp)
         )
         {
