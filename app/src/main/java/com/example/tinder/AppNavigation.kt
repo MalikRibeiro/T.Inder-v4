@@ -15,19 +15,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tinder.ui.theme.TinderTheme
 
-class NavigateActivity : ComponentActivity() {
+class AppNavigation : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TinderTheme {
-                AppNavigation()
+                AppNavHost()
             }
         }
     }
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavHost() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "TelaLogin") {
