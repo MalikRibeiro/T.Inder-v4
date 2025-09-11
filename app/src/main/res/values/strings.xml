@@ -8,4 +8,5 @@
     <string name="title_activity_app_navigation">AppNavigation</string>
     <string name="title_activity_login_screen">LoginScreen</string>
     <string name="title_activity_home_screen">HomeScreen</string>
+    <string name="title_activity_tela_perfil">TelaPerfil</string>
 </resources>

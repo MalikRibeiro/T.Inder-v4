@@ -24,5 +24,9 @@ fun AppNavigation() {
         composable("tela_matches") {
             HomeScreen(navController = navController)
         }
+
+        composable("tela_perfil") {
+            TelaPerfil(navController = navController)
+        }
     }
 }

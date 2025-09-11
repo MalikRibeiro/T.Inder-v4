@@ -85,7 +85,7 @@ fun TelaLogin(navController: NavController) {
 
         Button(
             colors = ButtonDefaults.buttonColors(Color.Magenta),
-            onClick = {navController.navigate("tela_principal")},
+            onClick = {navController.navigate("tela_perfil")},
             modifier = Modifier.padding(top = 16.dp)
         )
         {

@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,7 +47,9 @@ fun HomeScreen(navController: NavController) {
             TopAppBar(title = { Text("Descobrir") })
         }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
+        Column(modifier = Modifier
+            .padding(paddingValues)
+            .padding(16.dp)) {
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -54,6 +57,14 @@ fun HomeScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                colors = ButtonDefaults.buttonColors(Color.Magenta),
+                onClick = {navController.navigate("tela_perfil")},
+                modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+            )
+            {
+                Text(text = "Tela de Perfil")
+            }
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)

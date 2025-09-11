@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,9 +21,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
-fun TelaMatches(onClickVoltar: () -> Unit) {
+fun TelaMatches(navController: NavController) {
     val matches =
         listOf("Paula Fernandes", "Ana Castela", "Giulia Be", "Marilia Mendonça", "Simone Mendes")
     val context = LocalContext.current
@@ -42,12 +41,6 @@ fun TelaMatches(onClickVoltar: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Matches", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-            Button(
-                colors = ButtonDefaults.buttonColors(Color.Magenta),
-                onClick = onClickVoltar)
-            {
-                Text(text = "Voltar")
-            }
         }
         Row (
         ) {
