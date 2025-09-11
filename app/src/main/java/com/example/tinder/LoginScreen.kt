@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.tinder.ui.theme.TinderTheme
 
 class LoginScreen : ComponentActivity() {
@@ -48,7 +49,7 @@ data class Dados(
 )
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TelaLogin(onClickPrincipal: () -> Unit) {
+fun TelaLogin(navController: NavController) {
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -84,7 +85,7 @@ fun TelaLogin(onClickPrincipal: () -> Unit) {
 
         Button(
             colors = ButtonDefaults.buttonColors(Color.Magenta),
-            onClick = onClickPrincipal,
+            onClick = {navController.navigate("tela_principal")},
             modifier = Modifier.padding(top = 16.dp)
         )
         {
