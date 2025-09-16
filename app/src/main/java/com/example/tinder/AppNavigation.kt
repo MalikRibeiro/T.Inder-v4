@@ -19,12 +19,24 @@ fun AppNavigation() {
             TelaLogin(navController = navController)
         }
 
-        composable("tela_principal") {
-            TelaPrincipal(navController = navController)
+        composable (
+            route = "tela_principal/{usuario}",
+            arguments = listOf(navArgument("usuario") {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val usuario = backStackEntry.arguments?.getString("usuario") ?: ""
+            TelaPrincipal(navController = navController, usuario = usuario)
         }
 
-        composable("tela_matches") {
-            HomeScreen(navController = navController)
+        composable(
+            route = "tela_matches/{usuario}",
+            arguments = listOf(navArgument("usuario") {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val usuario = backStackEntry.arguments?.getString("usuario") ?: ""
+            HomeScreen(navController = navController, usuario = usuario)
         }
 
         composable(

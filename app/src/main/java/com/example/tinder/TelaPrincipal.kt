@@ -28,7 +28,7 @@ private val listaDePerfis = listOf(
 )
 
 @Composable
-fun TelaPrincipal(navController: NavController) {
+fun TelaPrincipal(navController: NavController, usuario: String) {
     var indiceAtual by remember { mutableStateOf(0) }
     val perfilAtual = listaDePerfis[indiceAtual]
 
@@ -52,7 +52,7 @@ fun TelaPrincipal(navController: NavController) {
 
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
-                onClick = { navController.navigate("tela_matches") })
+                onClick = { navController.navigate("tela_matches/$usuario") })
             {
                 Text(text = "Matches")
             }
