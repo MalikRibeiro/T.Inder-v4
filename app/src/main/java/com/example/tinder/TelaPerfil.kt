@@ -1,26 +1,29 @@
 package com.example.tinder
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TelaPerfil(navController: NavController) {
+fun TelaPerfil(navController: NavController, usuario: String) {
+
+    var bio by remember { mutableStateOf("Fale um pouco sobre você aqui. Adicione seus hobbies, interesses e o que você procura.") }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -41,25 +44,28 @@ fun TelaPerfil(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.profile_image),
-                contentDescription = "Minha Foto de Perfil",
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+            Icon(
+                imageVector = Icons.Filled.Person,
+                contentDescription = "Ícone de Perfil",
+                modifier = Modifier.size(150.dp),
+                tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Gustavo Guilherme",
+                text = usuario,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Fale um pouco sobre você aqui. Adicione seus hobbies, interesses e o que você procura.",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(horizontal = 16.dp)
+
+            OutlinedTextField(
+                value = bio,
+                onValueChange = { bio = it },
+                label = { Text("Escreva sua bio") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 100.dp),
+                singleLine = false
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(

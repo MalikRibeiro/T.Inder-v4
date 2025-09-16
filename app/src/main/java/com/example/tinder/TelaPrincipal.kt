@@ -6,7 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,8 +18,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
+data class Perfil(val nome: String, val fotoResId: Int)
+
+private val listaDePerfis = listOf(
+    Perfil("Silvo, 60", R.drawable.h),
+    Perfil("Ludmila, 23", R. drawable.e),
+    Perfil("Neymar, 18", R.drawable.f),
+    Perfil("Careca, 32", R.drawable.g)
+)
+
 @Composable
 fun TelaPrincipal(navController: NavController) {
+    var indiceAtual by remember { mutableStateOf(0) }
+    val perfilAtual = listaDePerfis[indiceAtual]
 
     Column(
         modifier = Modifier
@@ -38,7 +49,6 @@ fun TelaPrincipal(navController: NavController) {
                 contentDescription = "Logo",
                 modifier = Modifier.size(40.dp)
             )
-            Text("T.inder", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
 
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
@@ -48,9 +58,19 @@ fun TelaPrincipal(navController: NavController) {
             }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = perfilAtual.nome,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Image(
-            painter = painterResource(id = R.drawable.profile_image),
-            contentDescription = "Foto Perfil",
+            painter = painterResource(id = perfilAtual.fotoResId),
+            contentDescription = "Foto de ${perfilAtual.nome}",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,18 +78,26 @@ fun TelaPrincipal(navController: NavController) {
                 .clip(RoundedCornerShape(16.dp))
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
-                onClick = { /* Ação "Não" */ }) {
-                Text("X")
+                onClick = {
+                    indiceAtual = (indiceAtual + 1) % listaDePerfis.size
+                }
+            ) {
+                Text("◀️")
             }
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
-                onClick = { /* Ação "Sim" */ }) {
+                onClick = {
+                    indiceAtual = (indiceAtual + 1) % listaDePerfis.size
+                }
+            ) {
                 Text("❤️")
             }
         }

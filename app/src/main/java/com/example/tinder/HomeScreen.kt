@@ -22,14 +22,40 @@ data class MatchProfile(
     val id: Int,
     val name: String,
     val description: String,
+    val imageRes: Int,
 )
 
 private val sampleProfiles = listOf(
-    MatchProfile(1, "Ana, 24", "Apaixonada por criar apps com Kotlin e Jetpack Compose."),
-    MatchProfile(2, "Carlos, 29", "Explorando o mundo de Machine Learning e redes neurais."),
-    MatchProfile(3, "Beatriz, 22", "Focada em criar experiências de usuário intuitivas e bonitas."),
-    MatchProfile(4, "Daniel, 31", "Capturando momentos e culturas ao redor do mundo."),
-    MatchProfile(5, "Julia, 26", "Criando batidas e melodias no meu tempo livre.")
+    MatchProfile(
+        id = 1,
+        name = "Ana, 24",
+        description = "Desenvolvedora de apps por profissão, aventureira por vocação. Em busca de alguém que tope maratonar séries e criar o próximo grande app juntos. 🤓✨",
+        imageRes = R.drawable.a
+    ),
+    MatchProfile(
+        id = 2,
+        name = "Rosana, 29",
+        description = "Engenheira de Machine Learning com uma paixão secreta por cafés coados e trilhas na natureza. Topa decifrar o algoritmo do amor comigo?",
+        imageRes = R.drawable.b
+    ),
+    MatchProfile(
+        id = 3,
+        name = "Beatriz, 22",
+        description = "Designer UX com a missão de tornar a vida mais fácil, uma interface de cada vez. Adoro museus, shows e encontrar beleza nas pequenas coisas.",
+        imageRes = R.drawable.c
+    ),
+    MatchProfile(
+        id = 4,
+        name = "Daniel, 31",
+        description = "Capturando a alma do mundo com minha câmera. Entre uma viagem e outra, estou sempre procurando um bom papo, uma risada e uma história para contar.",
+        imageRes = R.drawable.d
+    ),
+    MatchProfile(
+        id = 5,
+        name = "Julia, 26",
+        description = "Produtora musical nas horas vagas, busco uma sintonia perfeita. Se a vida fosse uma música, qual seria sua melodia favorita?",
+        imageRes = R.drawable.e
+    )
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,9 +73,11 @@ fun HomeScreen(navController: NavController) {
             TopAppBar(title = { Text("Descobrir") })
         }
     ) { paddingValues ->
-        Column(modifier = Modifier
-            .padding(paddingValues)
-            .padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -59,8 +87,10 @@ fun HomeScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
-                onClick = {navController.navigate("tela_perfil")},
-                modifier = Modifier.padding(top = 16.dp).fillMaxWidth()
+                onClick = { navController.navigate("tela_perfil") },
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth()
             )
             {
                 Text(text = "Tela de Perfil")
@@ -90,7 +120,7 @@ fun ProfileCard(profile: MatchProfile) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.profile_image),
+                painter = painterResource(id = profile.imageRes),
                 contentDescription = profile.name,
                 modifier = Modifier.size(80.dp),
                 contentScale = ContentScale.Crop
@@ -110,7 +140,8 @@ fun ProfileCard(profile: MatchProfile) {
                 )
                 Button(
                     onClick = {
-                        Toast.makeText(context, "Match com ${profile.name}!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Match com ${profile.name}!", Toast.LENGTH_SHORT)
+                            .show()
                     },
                     modifier = Modifier.align(Alignment.End)
                 ) {
