@@ -47,13 +47,13 @@ private val mesmoPerfil = listOf(
     ),
     MatchProfile(
         id = 4,
-        nome = "Daniel, 31",
+        nome = "Roberta, 31",
         descricao = "Capturando a alma do mundo com minha câmera. Entre uma viagem e outra, estou sempre procurando um bom papo, uma risada e uma história para contar.",
         imageRes = R.drawable.d
     ),
     MatchProfile(
         id = 5,
-        nome = "Julia, 26",
+        nome = "Ludmila, 26",
         descricao = "Produtora musical nas horas vagas, busco uma sintonia perfeita. Se a vida fosse uma música, qual seria sua melodia favorita?",
         imageRes = R.drawable.e
     )

@@ -72,7 +72,7 @@ fun TelaPerfil(navController: NavController, usuario: String) {
                 colors = ButtonDefaults.buttonColors(Laranja),
                 onClick = { navController.navigate("tela_principal/$usuario") })
             {
-                Text(text = "Matches")
+                Text(text = "Tela Principal")
             }
         }
     }
