@@ -1,5 +1,6 @@
 package com.example.tinder
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.ui.platform.LocalContext
 
 data class Perfil(val nome: String, val fotoResId: Int)
 
@@ -31,6 +33,7 @@ private val listaDePerfis = listOf(
 fun TelaPrincipal(navController: NavController, usuario: String) {
     var indiceAtual by remember { mutableStateOf(0) }
     val perfilAtual = listaDePerfis[indiceAtual]
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -52,8 +55,8 @@ fun TelaPrincipal(navController: NavController, usuario: String) {
 
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
-                onClick = { navController.navigate("tela_matches/$usuario") })
-            {
+                onClick = { navController.navigate("tela_matches/$usuario") }
+            ) {
                 Text(text = "Matches")
             }
         }
@@ -87,7 +90,8 @@ fun TelaPrincipal(navController: NavController, usuario: String) {
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
                 onClick = {
-                    indiceAtual = (indiceAtual + 1) % listaDePerfis.size
+                    Toast.makeText(context, "Match cancelado com ${perfilAtual.nome}!", Toast.LENGTH_SHORT).show()
+                    indiceAtual = (indiceAtual + listaDePerfis.size - 1) % listaDePerfis.size
                 }
             ) {
                 Text("◀️")
@@ -95,6 +99,7 @@ fun TelaPrincipal(navController: NavController, usuario: String) {
             Button(
                 colors = ButtonDefaults.buttonColors(Color.Magenta),
                 onClick = {
+                    Toast.makeText(context, "Match com ${perfilAtual.nome}!", Toast.LENGTH_SHORT).show()
                     indiceAtual = (indiceAtual + 1) % listaDePerfis.size
                 }
             ) {
