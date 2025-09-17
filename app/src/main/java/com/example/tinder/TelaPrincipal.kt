@@ -4,14 +4,18 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,7 +58,7 @@ fun TelaPrincipal(navController: NavController, usuario: String) {
             )
 
             Button(
-                colors = ButtonDefaults.buttonColors(Color.Magenta),
+                colors = ButtonDefaults.buttonColors(Laranja),
                 onClick = { navController.navigate("tela_matches/$usuario") }
             ) {
                 Text(text = "Matches")
@@ -88,22 +92,27 @@ fun TelaPrincipal(navController: NavController, usuario: String) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                colors = ButtonDefaults.buttonColors(Color.Magenta),
+                colors = ButtonDefaults.buttonColors(Laranja),
                 onClick = {
                     Toast.makeText(context, "Match cancelado com ${perfilAtual.nome}!", Toast.LENGTH_SHORT).show()
                     indiceAtual = (indiceAtual + listaDePerfis.size - 1) % listaDePerfis.size
                 }
             ) {
-                Text("◀️")
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Voltar",
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.White
+                )
             }
             Button(
-                colors = ButtonDefaults.buttonColors(Color.Magenta),
+                colors = ButtonDefaults.buttonColors(Laranja),
                 onClick = {
                     Toast.makeText(context, "Match com ${perfilAtual.nome}!", Toast.LENGTH_SHORT).show()
                     indiceAtual = (indiceAtual + 1) % listaDePerfis.size
                 }
             ) {
-                Text("❤️")
+                Text("\uD83E\uDD0D")
             }
         }
     }

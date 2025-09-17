@@ -21,57 +21,57 @@ import androidx.navigation.NavController
 
 data class MatchProfile(
     val id: Int,
-    val name: String,
-    val description: String,
+    val nome: String,
+    val descricao: String,
     val imageRes: Int,
 )
 
-private val sampleProfiles = listOf(
+private val mesmoPerfil = listOf(
     MatchProfile(
         id = 1,
-        name = "Ana, 24",
-        description = "Desenvolvedora de apps por profissão, aventureira por vocação. Em busca de alguém que tope maratonar séries e criar o próximo grande app juntos. 🤓✨",
+        nome = "Ana, 24",
+        descricao = "Desenvolvedora de apps por profissão, aventureira por vocação. Em busca de alguém que tope maratonar séries e criar o próximo grande app juntos. 🤓✨",
         imageRes = R.drawable.a
     ),
     MatchProfile(
         id = 2,
-        name = "Rosana, 29",
-        description = "Engenheira de Machine Learning com uma paixão secreta por cafés coados e trilhas na natureza. Topa decifrar o algoritmo do amor comigo?",
+        nome = "Rosana, 29",
+        descricao = "Engenheira de Machine Learning com uma paixão secreta por cafés coados e trilhas na natureza. Topa decifrar o algoritmo do amor comigo?",
         imageRes = R.drawable.b
     ),
     MatchProfile(
         id = 3,
-        name = "Beatriz, 22",
-        description = "Designer UX com a missão de tornar a vida mais fácil, uma interface de cada vez. Adoro museus, shows e encontrar beleza nas pequenas coisas.",
+        nome = "Beatriz, 22",
+        descricao = "Designer UX com a missão de tornar a vida mais fácil, uma interface de cada vez. Adoro museus, shows e encontrar beleza nas pequenas coisas.",
         imageRes = R.drawable.c
     ),
     MatchProfile(
         id = 4,
-        name = "Daniel, 31",
-        description = "Capturando a alma do mundo com minha câmera. Entre uma viagem e outra, estou sempre procurando um bom papo, uma risada e uma história para contar.",
+        nome = "Daniel, 31",
+        descricao = "Capturando a alma do mundo com minha câmera. Entre uma viagem e outra, estou sempre procurando um bom papo, uma risada e uma história para contar.",
         imageRes = R.drawable.d
     ),
     MatchProfile(
         id = 5,
-        name = "Julia, 26",
-        description = "Produtora musical nas horas vagas, busco uma sintonia perfeita. Se a vida fosse uma música, qual seria sua melodia favorita?",
+        nome = "Julia, 26",
+        descricao = "Produtora musical nas horas vagas, busco uma sintonia perfeita. Se a vida fosse uma música, qual seria sua melodia favorita?",
         imageRes = R.drawable.e
     )
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, usuario: String) {
-    var searchQuery by remember { mutableStateOf("") }
+fun TelaMatches(navController: NavController, usuario: String) {
+    var Pesquisa by remember { mutableStateOf("") }
 
-    val filteredList = sampleProfiles.filter {
-        it.name.contains(searchQuery, ignoreCase = true) ||
-                it.description.contains(searchQuery, ignoreCase = true)
+    val ListaFiltro= mesmoPerfil.filter {
+        it.nome.contains(Pesquisa, ignoreCase = true) ||
+                it.descricao.contains(Pesquisa, ignoreCase = true)
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Meus Matches") })
+            TopAppBar(title = { Text("Meus Matches - $usuario") })
         }
     ) { paddingValues ->
         Column(
@@ -79,15 +79,16 @@ fun HomeScreen(navController: NavController, usuario: String) {
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
+
             OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
+                value = Pesquisa,
+                onValueChange = { Pesquisa = it },
                 label = { Text("Buscar perfil...") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                colors = ButtonDefaults.buttonColors(Color.Magenta),
+                colors = ButtonDefaults.buttonColors(Laranja),
                 onClick = { navController.navigate("tela_perfil/$usuario") },
                 modifier = Modifier
                     .padding(top = 16.dp)
@@ -100,8 +101,8 @@ fun HomeScreen(navController: NavController, usuario: String) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(filteredList) { profile ->
-                    ProfileCard(profile = profile)
+                items(ListaFiltro) { perfil ->
+                    CardPerfil(perfil = perfil)
                 }
             }
         }
@@ -109,7 +110,7 @@ fun HomeScreen(navController: NavController, usuario: String) {
 }
 
 @Composable
-fun ProfileCard(profile: MatchProfile) {
+fun CardPerfil(perfil: MatchProfile) {
     val context = LocalContext.current
 
     Card(
@@ -121,8 +122,8 @@ fun ProfileCard(profile: MatchProfile) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = profile.imageRes),
-                contentDescription = profile.name,
+                painter = painterResource(id = perfil.imageRes),
+                contentDescription = perfil.nome,
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape),
@@ -132,12 +133,12 @@ fun ProfileCard(profile: MatchProfile) {
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = profile.name,
+                    text = perfil.nome,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
                 Text(
-                    text = profile.description,
+                    text = perfil.descricao,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
                 )

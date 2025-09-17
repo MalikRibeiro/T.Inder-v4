@@ -36,7 +36,7 @@ fun AppNavigation() {
             })
         ) { backStackEntry ->
             val usuario = backStackEntry.arguments?.getString("usuario") ?: ""
-            HomeScreen(navController = navController, usuario = usuario)
+            TelaMatches(navController = navController, usuario = usuario)
         }
 
         composable(
