@@ -17,6 +17,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.tinder.ui.theme.TinderTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,5 +78,14 @@ fun TelaPerfil(navController: NavController, usuario: String) {
                 Text(text = "Tela Principal")
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TelaPerfilPreview() {
+    TinderTheme {
+        val navController = rememberNavController()
+        TelaPerfil(navController = navController, usuario = "Joao")
     }
 }

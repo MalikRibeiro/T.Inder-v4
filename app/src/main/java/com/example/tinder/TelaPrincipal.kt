@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.tinder.ui.theme.TinderTheme
 
 data class Perfil(val nome: String, val fotoResId: Int)
 
@@ -115,5 +118,14 @@ fun TelaPrincipal(navController: NavController, usuario: String) {
                 Text("\uD83E\uDD0D")
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TelaPrincipalPreview() {
+    TinderTheme {
+        val navController = rememberNavController()
+        TelaPrincipal(navController = navController, usuario = "Joao")
     }
 }
