@@ -1,6 +1,5 @@
 package com.example.tinder
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -72,7 +71,7 @@ fun HomeScreen(navController: NavController, usuario: String) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Descobrir") })
+            TopAppBar(title = { Text("Meus Matches") })
         }
     ) { paddingValues ->
         Column(
@@ -142,15 +141,6 @@ fun ProfileCard(profile: MatchProfile) {
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
                 )
-                Button(
-                    onClick = {
-                        Toast.makeText(context, "Match com ${profile.name}!", Toast.LENGTH_SHORT)
-                            .show()
-                    },
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text("❤️")
-                }
             }
         }
     }
