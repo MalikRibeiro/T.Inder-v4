@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -19,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
-data class MatchProfile(
+data class PerfilcomMatches(
     val id: Int,
     val nome: String,
     val descricao: String,
@@ -27,31 +26,31 @@ data class MatchProfile(
 )
 
 private val mesmoPerfil = listOf(
-    MatchProfile(
+    PerfilcomMatches(
         id = 1,
         nome = "Ana, 24",
         descricao = "Desenvolvedora de apps por profissão, aventureira por vocação. Em busca de alguém que tope maratonar séries e criar o próximo grande app juntos. 🤓✨",
         imageRes = R.drawable.a
     ),
-    MatchProfile(
+    PerfilcomMatches(
         id = 2,
         nome = "Rosana, 29",
         descricao = "Engenheira de Machine Learning com uma paixão secreta por cafés coados e trilhas na natureza. Topa decifrar o algoritmo do amor comigo?",
         imageRes = R.drawable.b
     ),
-    MatchProfile(
+    PerfilcomMatches(
         id = 3,
         nome = "Beatriz, 22",
         descricao = "Designer UX com a missão de tornar a vida mais fácil, uma interface de cada vez. Adoro museus, shows e encontrar beleza nas pequenas coisas.",
         imageRes = R.drawable.c
     ),
-    MatchProfile(
+    PerfilcomMatches(
         id = 4,
         nome = "Roberta, 31",
         descricao = "Capturando a alma do mundo com minha câmera. Entre uma viagem e outra, estou sempre procurando um bom papo, uma risada e uma história para contar.",
         imageRes = R.drawable.d
     ),
-    MatchProfile(
+    PerfilcomMatches(
         id = 5,
         nome = "Ludmila, 26",
         descricao = "Produtora musical nas horas vagas, busco uma sintonia perfeita. Se a vida fosse uma música, qual seria sua melodia favorita?",
@@ -110,7 +109,7 @@ fun TelaMatches(navController: NavController, usuario: String) {
 }
 
 @Composable
-fun CardPerfil(perfil: MatchProfile) {
+fun CardPerfil(perfil: PerfilcomMatches) {
     val context = LocalContext.current
 
     Card(
