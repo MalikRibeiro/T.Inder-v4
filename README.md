@@ -1,4 +1,6 @@
-T.inder v2: Um Estudo de UI com Jetpack Compose
+ # Projeto T.inder v2
+
+Um Estudo de UI com Jetpack Compose
 📖 Sobre o Projeto
 T.inder v2 é um projeto de estudo focado em replicar a experiência visual de um aplicativo de relacionamentos, como o Tinder, utilizando as mais modernas ferramentas de desenvolvimento Android. O principal objetivo foi aprofundar os conhecimentos em Jetpack Compose, explorando a criação de interfaces declarativas, gerenciamento de estado e navegação de forma concisa e eficiente.
 
