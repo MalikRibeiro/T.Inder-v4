@@ -56,7 +56,7 @@ Execute:
 
 Inicie o app em um emulador ou dispositivo físico Android.
 
-📂 Arquitetura e Estrutura do Código
+## 📂 Arquitetura e Estrutura do Código
 O projeto foi simplificado para foco total em UI com Compose, mantendo todo o código centralizado em MainActivity.kt.
 
 A navegação é gerenciada por uma variável de estado:
@@ -66,7 +66,7 @@ Copiar código
 var telaAtual by remember { mutableStateOf(0) }
 Uma estrutura when é usada para alternar entre os Composables das telas de forma reativa.
 
-📈 Possíveis Melhorias (Próximos Passos)
+## 📈 Possíveis Melhorias (Próximos Passos)
 Para evoluir o projeto em direção a uma aplicação mais robusta:
 
 Separar Composables: Criar arquivos .kt individuais para cada tela (Login, Home, Matches).
