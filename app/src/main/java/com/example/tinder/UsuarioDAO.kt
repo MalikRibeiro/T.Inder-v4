@@ -1,0 +1,24 @@
+package com.example.tinder
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Delete
+import androidx.room.Update
+
+@Dao
+interface UsuarioDAO{
+
+    @Insert
+    suspend fun inserir(usuario: Usuario)
+
+    @Query("SELECT * FROM usuario")
+    suspend fun buscarTodos() : List<Usuario>
+
+    @Delete
+    suspend fun deletar(filme: Usuario)
+
+    @Update
+    suspend fun atualizar(filme: Usuario)
+
+}
