@@ -1,31 +1,50 @@
+// malikribeiro/t.inder-v3/T.Inder-v3-b3fe78c748e6529a5171d07b29595c81105f0915/app/src/main/java/com/example/tinder/TelaPerfil.kt
+
 package com.example.tinder
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.tinder.ui.theme.TinderTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaPerfil(navController: NavController, usuario: String) {
 
-    var bio by remember { mutableStateOf("Fale um pouco sobre você aqui. Adicione seus hobbies, interesses e o que você procura.") }
+    var bio by remember { mutableStateOf("") }
+    var usuarioCompleto by remember { mutableStateOf<Usuario?>(null) }
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val usuarioDAO = AppDatabase.getDatabase(context).usuarioDAO()
+
+    LaunchedEffect(key1 = usuario) {
+        scope.launch(Dispatchers.IO) {
+            val usuarioEncontrado = usuarioDAO.buscarPorNome(usuario)
+            if (usuarioEncontrado != null) {
+                withContext(Dispatchers.Main) {
+                    usuarioCompleto = usuarioEncontrado
+                    bio = usuarioEncontrado.desc
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -70,10 +89,37 @@ fun TelaPerfil(navController: NavController, usuario: String) {
                     .heightIn(min = 100.dp),
                 singleLine = false
             )
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    if (usuarioCompleto != null) {
+                        scope.launch(Dispatchers.IO) {
+                            val usuarioAtualizado = usuarioCompleto!!.copy(desc = bio)
+                            usuarioDAO.atualizar(usuarioAtualizado)
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(context, "Bio salva com sucesso!", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            ) {
+                Text(text = "Salvar Bio")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 colors = ButtonDefaults.buttonColors(Laranja),
-                onClick = { navController.navigate("tela_principal/$usuario") })
+                onClick = {
+                    if (usuarioCompleto != null) {
+                        scope.launch(Dispatchers.IO) {
+                            val usuarioAtualizado = usuarioCompleto!!.copy(desc = bio)
+                            usuarioDAO.atualizar(usuarioAtualizado)
+                        }
+                    }
+                    navController.navigate("tela_principal/$usuario")
+                })
             {
                 Text(text = "Tela Principal")
             }
@@ -84,8 +130,12 @@ fun TelaPerfil(navController: NavController, usuario: String) {
 @Preview(showBackground = true)
 @Composable
 fun TelaPerfilPreview() {
+
     TinderTheme {
+
         val navController = rememberNavController()
+
         TelaPerfil(navController = navController, usuario = "Joao")
+
     }
 }

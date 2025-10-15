@@ -7,18 +7,23 @@ import androidx.room.Delete
 import androidx.room.Update
 
 @Dao
-interface UsuarioDAO{
+interface UsuarioDAO {
 
     @Insert
     suspend fun inserir(usuario: Usuario)
 
     @Query("SELECT * FROM usuario")
-    suspend fun buscarTodos() : List<Usuario>
+    suspend fun buscarTodos(): List<Usuario>
 
     @Delete
-    suspend fun deletar(filme: Usuario)
+    suspend fun deletar(usuario: Usuario)
 
     @Update
-    suspend fun atualizar(filme: Usuario)
+    suspend fun atualizar(usuario: Usuario)
 
+    @Query("SELECT * FROM usuario WHERE nome = :nome AND senha = :senha LIMIT 1")
+    suspend fun buscarPorNomeESenha(nome: String, senha: String): Usuario?
+
+    @Query("SELECT * FROM usuario WHERE nome = :nome LIMIT 1")
+    suspend fun buscarPorNome(nome: String): Usuario?
 }

@@ -19,6 +19,10 @@ fun AppNavigation() {
             TelaLogin(navController = navController)
         }
 
+        composable("tela_cadastro") {
+            TelaCadastro(navController = navController)
+        }
+
         composable (
             route = "tela_principal/{usuario}",
             arguments = listOf(navArgument("usuario") {

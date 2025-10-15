@@ -16,11 +16,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +38,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tinder.ui.theme.TinderTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 val Laranja = Color(0xFFFF5722)
 val Preto = Color(0xFF000000)
@@ -56,6 +61,9 @@ fun TelaLogin(navController: NavController) {
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val db = AppDatabase.getDatabase(context)
+    val usuarioDAO = db.usuarioDAO()
 
     Column(
         modifier = Modifier
@@ -105,10 +113,16 @@ fun TelaLogin(navController: NavController) {
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = {
-                if (usuario == "Joao" && senha == "123") {
-                    navController.navigate("tela_perfil/$usuario")
-                } else {
-                    Toast.makeText(context, "Login inválido!", Toast.LENGTH_SHORT).show()
+                scope.launch(Dispatchers.IO) {
+                    val usuarioLogado = usuarioDAO.buscarPorNomeESenha(usuario, senha)
+
+                    withContext(Dispatchers.Main) {
+                        if (usuarioLogado != null) {
+                            navController.navigate("tela_perfil/${usuarioLogado.nome}")
+                        } else {
+                            Toast.makeText(context, "Usuário ou senha inválidos!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             },
             modifier = Modifier
@@ -124,6 +138,9 @@ fun TelaLogin(navController: NavController) {
         }
 
         //Spacer(modifier = Modifier.height(100.dp))
+        TextButton(onClick = { navController.navigate("tela_cadastro") }) {
+            Text(text = "Cadastre-se")
+        }
 
         Image(
             painter = painterResource(id = R.drawable.logo),
