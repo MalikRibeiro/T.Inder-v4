@@ -15,8 +15,8 @@ interface UsuarioDAO {
     @Query("SELECT * FROM usuario")
     suspend fun buscarTodos(): List<Usuario>
 
-    @Delete
-    suspend fun deletar(usuario: Usuario)
+    @Query("DELETE FROM usuario WHERE id = :id")
+    suspend fun deletar(id: Int)
 
     @Update
     suspend fun atualizar(usuario: Usuario)

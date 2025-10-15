@@ -1,5 +1,3 @@
-// malikribeiro/t.inder-v3/T.Inder-v3-b3fe78c748e6529a5171d07b29595c81105f0915/app/src/main/java/com/example/tinder/TelaPerfil.kt
-
 package com.example.tinder
 
 import android.widget.Toast
@@ -11,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -122,6 +121,27 @@ fun TelaPerfil(navController: NavController, usuario: String) {
                 })
             {
                 Text(text = "Tela Principal")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                onClick = {
+                    if (usuarioCompleto != null) {
+                        scope.launch(Dispatchers.IO) {
+                            usuarioDAO.deletar(usuarioCompleto!!.id)
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(context, "Perfil excluído.", Toast.LENGTH_SHORT).show()
+                                navController.navigate("tela_login") {
+                                    popUpTo(0)
+                                }
+                            }
+                        }
+                    }
+                })
+            {
+                Text(text = "Excluir Perfil")
             }
         }
     }
