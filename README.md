@@ -1,4 +1,4 @@
-# Projeto T.inder v3
+# Projeto T.inder v
 
 ### Um Estudo de UI com Jetpack Compose e Funcionalidades de App Completas
 
