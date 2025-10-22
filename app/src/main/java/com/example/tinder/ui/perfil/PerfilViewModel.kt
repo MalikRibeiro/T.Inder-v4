@@ -26,7 +26,8 @@ data class PerfilUiState(
     val carregando: Boolean = true,
     val error: String? = null,
     val perfilExcluido: Boolean = false,
-    val nomeUsuarioArg: String = ""
+    val nomeUsuarioArg: String = "",
+    val bioSalvaComSucesso: Boolean = false
 )
 
 class PerfilViewModel(
@@ -84,18 +85,18 @@ class PerfilViewModel(
 
     fun onSalvarBio() {
         val state = _uiState.value
-        if (state.usuario != null && state.bio != state.usuario.desc) {
-            _uiState.update { it.copy(carregando = true) }
+        if (state.usuario != null && state.bio != state.usuario.desc && !state.carregando) {
+            _uiState.update { it.copy(carregando = true, error = null, bioSalvaComSucesso = false) } // Reseta o sucesso anterior
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     val usuarioAtualizado = state.usuario.copy(desc = state.bio)
-                    repository.atualizarUsuario(usuarioAtualizado)
-                    _uiState.update { it.copy(carregando = false) }
+                    _uiState.update { it.copy(carregando = false, bioSalvaComSucesso = true) }
 
                 } catch (e: Exception) {
                     _uiState.update { it.copy(carregando = false, error = "Erro ao salvar bio: ${e.message}") }
                 }
             }
+        } else if (state.bio == state.usuario?.desc) {
         }
     }
 
@@ -116,6 +117,10 @@ class PerfilViewModel(
 
     fun onPerfilExcluidoNavegado() {
         _uiState.update { it.copy(perfilExcluido = false) }
+    }
+
+    fun onMensagemBioSalvaMostrada() {
+        _uiState.update { it.copy(bioSalvaComSucesso = false) }
     }
 
 

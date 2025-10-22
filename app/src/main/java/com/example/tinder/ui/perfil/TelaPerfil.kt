@@ -19,16 +19,16 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tinder.ui.login.Laranja
 import com.example.tinder.data.local.AppDatabase
-import com.example.tinder.data.local.Usuario
 import com.example.tinder.ui.theme.TinderTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import com.example.tinder.ui.perfil.PerfilViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import com.example.tinder.data.repository.UsuarioRepository
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.filled.Search
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +54,13 @@ fun TelaPerfil(navController: NavController, usuario: String) {
         }
     }
 
+    LaunchedEffect(key1 = uiState.bioSalvaComSucesso) {
+        if (uiState.bioSalvaComSucesso) {
+            Toast.makeText(context, "Bio salva com sucesso!", Toast.LENGTH_SHORT).show()
+            viewModel.onMensagemBioSalvaMostrada()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -62,13 +69,25 @@ fun TelaPerfil(navController: NavController, usuario: String) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
                     }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        uiState.usuario?.let { user ->
+                            navController.navigate("tela_principal/${user.nome}") {
+                            }
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Home,
+                            contentDescription = "Tela Principal"
+                        )
+                    }
                 }
             )
         }
     ) { paddingValues ->
         if (uiState.carregando && uiState.usuario == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
             }
         } else if (uiState.usuario != null) {
             Column(
@@ -78,7 +97,8 @@ fun TelaPerfil(navController: NavController, usuario: String) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
-            ) {
+            )
+            {
                 Icon(
                     imageVector = Icons.Filled.Person,
                     contentDescription = "Ícone de Perfil",
@@ -105,32 +125,38 @@ fun TelaPerfil(navController: NavController, usuario: String) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { viewModel.onSalvarBio() }
+                    onClick = { viewModel.onSalvarBio() },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (uiState.carregando) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
-                            color = Color.White
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Salvar Bio"
                         )
-                    } else {
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(text = "Salvar Bio")
                     }
+                }
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        colors = ButtonDefaults.buttonColors(Laranja),
-                        onClick = { navController.navigate("tela_principal/$usuario") })
-                    {
-                        Text(text = "Tela Principal")
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                        onClick = { viewModel.onExcluirPerfil() })
-                    {
+                Spacer(modifier = Modifier.height(26.dp))
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                    onClick = { viewModel.onExcluirPerfil() },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Excluir Perfil"
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(text = "Excluir Perfil")
                     }
                 }

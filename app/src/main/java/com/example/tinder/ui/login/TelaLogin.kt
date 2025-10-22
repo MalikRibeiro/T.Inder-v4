@@ -20,10 +20,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,15 +37,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tinder.R
 import com.example.tinder.data.local.AppDatabase
 import com.example.tinder.ui.theme.TinderTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import com.example.tinder.data.repository.UsuarioRepository
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.foundation.layout.size
 
 val Laranja = Color(0xFFFF5722)
 val Preto = Color(0xFF000000)
@@ -153,31 +145,25 @@ fun TelaLogin(navController: NavController) {
             )
         )
         {
-            if (uiState.carregando) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = Color.White
-                )
-            } else {
-                Text(text = "ENTRAR", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
+            Text(text = "ENTRAR", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }
 
-            //Spacer(modifier = Modifier.height(100.dp))
 
-            TextButton(onClick = { navController.navigate("tela_cadastro") }) {
-                Text(text = "Cadastre-se")
-            }
+        //Spacer(modifier = Modifier.height(100.dp))
 
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo do app",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .padding(top = 32.dp),
-                contentScale = ContentScale.Fit
-            )
+        TextButton(onClick = { navController.navigate("tela_cadastro") }) {
+            Text(text = "Cadastre-se")
+        }
+
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Logo do app",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .padding(top = 32.dp),
+            contentScale = ContentScale.Fit
+        )
     }
 }
 
