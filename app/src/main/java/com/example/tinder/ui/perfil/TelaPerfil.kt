@@ -24,26 +24,32 @@ import com.example.tinder.ui.theme.TinderTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.example.tinder.ui.perfil.PerfilViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import com.example.tinder.data.repository.UsuarioRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaPerfil(navController: NavController, usuario: String) {
 
-    var bio by remember { mutableStateOf("") }
-    var usuarioCompleto by remember { mutableStateOf<Usuario?>(null) }
-
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val usuarioDAO = AppDatabase.getDatabase(context).usuarioDAO()
+    val repository = remember {
+        UsuarioRepository(AppDatabase.getDatabase(context).usuarioDAO())
+    }
+    val viewModel: PerfilViewModel = viewModel(
+        factory = PerfilViewModel.Factory(repository)
+    )
 
-    LaunchedEffect(key1 = usuario) {
-        scope.launch(Dispatchers.IO) {
-            val usuarioEncontrado = usuarioDAO.buscarPorNome(usuario)
-            if (usuarioEncontrado != null) {
-                withContext(Dispatchers.Main) {
-                    usuarioCompleto = usuarioEncontrado
-                    bio = usuarioEncontrado.desc
-                }
+    val uiState by viewModel.uiState.collectAsState()
+
+    if (uiState.perfilExcluido) {
+        LaunchedEffect(Unit) {
+            Toast.makeText(context, "Perfil excluído.", Toast.LENGTH_SHORT).show()
+            viewModel.onPerfilExcluidoNavegado()
+            navController.navigate("tela_login") {
+                popUpTo(0)
             }
         }
     }
@@ -60,91 +66,74 @@ fun TelaPerfil(navController: NavController, usuario: String) {
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Person,
-                contentDescription = "Ícone de Perfil",
-                modifier = Modifier.size(150.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = usuario,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = bio,
-                onValueChange = { bio = it },
-                label = { Text("Escreva sua bio") },
+        if (uiState.carregando && uiState.usuario == null) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else if (uiState.usuario != null) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 100.dp),
-                singleLine = false
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = "Ícone de Perfil",
+                    modifier = Modifier.size(150.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = usuario,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
-                onClick = {
-                    if (usuarioCompleto != null) {
-                        scope.launch(Dispatchers.IO) {
-                            val usuarioAtualizado = usuarioCompleto!!.copy(desc = bio)
-                            usuarioDAO.atualizar(usuarioAtualizado)
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(context, "Bio salva com sucesso!", Toast.LENGTH_SHORT).show()
-                            }
-                        }
+                OutlinedTextField(
+                    value = uiState.bio,
+                    onValueChange = { viewModel.onBioChange(it) },
+                    label = { Text("Escreva sua bio") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 100.dp),
+                    singleLine = false
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { viewModel.onSalvarBio() }
+                ) {
+                    if (uiState.carregando) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = Color.White
+                        )
+                    } else {
+                        Text(text = "Salvar Bio")
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(Laranja),
+                        onClick = { navController.navigate("tela_principal/$usuario") })
+                    {
+                        Text(text = "Tela Principal")
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                        onClick = { viewModel.onExcluirPerfil() })
+                    {
+                        Text(text = "Excluir Perfil")
                     }
                 }
-            ) {
-                Text(text = "Salvar Bio")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                colors = ButtonDefaults.buttonColors(Laranja),
-                onClick = {
-                    if (usuarioCompleto != null) {
-                        scope.launch(Dispatchers.IO) {
-                            val usuarioAtualizado = usuarioCompleto!!.copy(desc = bio)
-                            usuarioDAO.atualizar(usuarioAtualizado)
-                        }
-                    }
-                    navController.navigate("tela_principal/$usuario")
-                })
-            {
-                Text(text = "Tela Principal")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                onClick = {
-                    if (usuarioCompleto != null) {
-                        scope.launch(Dispatchers.IO) {
-                            usuarioDAO.deletar(usuarioCompleto!!.id)
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(context, "Perfil excluído.", Toast.LENGTH_SHORT).show()
-                                navController.navigate("tela_login") {
-                                    popUpTo(0)
-                                }
-                            }
-                        }
-                    }
-                })
-            {
-                Text(text = "Excluir Perfil")
             }
         }
     }

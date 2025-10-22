@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 data class LoginUiState(
     val usuarioInput: String = "",
     val senhaInput: String = "",
-    val isLoading: Boolean = false,
+    val carregando: Boolean = false,
     val error: String? = null,
     val loginSucesso: Boolean = false,
     val nomeUsuarioLogado: String? = null
@@ -39,13 +39,15 @@ class LoginViewModel(
     }
 
     fun onLoginClick() {
+        if (_uiState.value.carregando) return
+
         val state = _uiState.value
         if (state.usuarioInput.isBlank() || state.senhaInput.isBlank()) {
             _uiState.update { it.copy(error = "Usuário e senha não podem estar vazios.") }
             return
         }
 
-        _uiState.update { it.copy(isLoading = true, error = null) }
+        _uiState.update { it.copy(carregando = true, error = null) }
 
         viewModelScope.launch {
             try {
@@ -56,22 +58,26 @@ class LoginViewModel(
                 if (usuarioEncontrado != null) {
                     _uiState.update {
                         it.copy(
-                            isLoading = false,
+                            carregando = false, // <-- 3. DESATIVA O LOADING
                             loginSucesso = true,
-                            nomeUsuarioLogado = usuarioEncontrado.nome // Guarda o nome para navegação
+                            nomeUsuarioLogado = usuarioEncontrado.nome
                         )
                     }
                 } else {
-                    _uiState.update { it.copy(isLoading = false, error = "Usuário ou senha inválidos!") }
+                    _uiState.update { it.copy(carregando = false, error = "Usuário ou senha inválidos!") } // <-- 3. DESATIVA O LOADING
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = "Erro ao tentar fazer login: ${e.message}") }
+                _uiState.update { it.copy(carregando = false, error = "Erro ao tentar fazer login: ${e.message}") } // <-- 3. DESATIVA O LOADING
             }
         }
     }
 
     fun onLoginNavegado() {
         _uiState.update { it.copy(loginSucesso = false, nomeUsuarioLogado = null) }
+    }
+
+    fun onErrorMostrado() {
+        _uiState.update { it.copy(error = null) }
     }
 
     companion object {

@@ -1,5 +1,3 @@
-// Crie este novo arquivo: TelaCadastro.kt
-
 package com.example.tinder.ui.cadastro
 
 import android.widget.Toast
@@ -17,24 +15,34 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tinder.data.local.AppDatabase
-import com.example.tinder.data.local.Usuario
 import com.example.tinder.ui.login.Laranja
 import com.example.tinder.ui.theme.TinderTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import com.example.tinder.data.repository.UsuarioRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaCadastro(navController: NavController) {
 
-    var nome by remember { mutableStateOf("") }
-    var senha by remember { mutableStateOf("") }
-    var desc by remember { mutableStateOf("Fale um pouco sobre você.") }
-
     val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context)
-    val usuarioDAO = db.usuarioDAO()
+    val repository = remember {
+        UsuarioRepository(AppDatabase.getDatabase(context).usuarioDAO())
+    }
+    val viewModel: CadastroViewModel = viewModel(
+        factory = CadastroViewModel.Factory(repository)
+    )
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    if (uiState.cadastroSucesso) {
+        LaunchedEffect(Unit) {
+            Toast.makeText(context, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show()
+            viewModel.onCadastroNavegado()
+            navController.popBackStack()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -51,43 +59,32 @@ fun TelaCadastro(navController: NavController) {
         )
 
         OutlinedTextField(
-            value = nome,
+            value = uiState.nomeInput,
             label = { Text(text = "Nome de Usuário") },
-            onValueChange = { nome = it },
+            onValueChange = { viewModel.onNomeChange(it) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = senha,
+            value = uiState.senhaInput,
             label = { Text(text = "Senha") },
-            onValueChange = { senha = it },
+            onValueChange = { viewModel.onSenhaChange(it) },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = desc,
+            value = uiState.descInput,
             label = { Text(text = "Sua bio inicial") },
-            onValueChange = { desc = it },
+            onValueChange = { viewModel.onDescChange(it) },
             modifier = Modifier.fillMaxWidth().height(100.dp)
         )
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = {
-                if (nome.isNotBlank() && senha.isNotBlank() && desc.isNotBlank()) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val novoUsuario = Usuario(nome = nome, senha = senha, desc = desc)
-                        usuarioDAO.inserir(novoUsuario)
-                    }
-                    Toast.makeText(context, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show()
-                    navController.popBackStack()
-                } else {
-                    Toast.makeText(context, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
-                }
-            },
+            onClick = { viewModel.onCadastrarClick() },
             modifier = Modifier.fillMaxWidth().height(56.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Laranja)
         ) {

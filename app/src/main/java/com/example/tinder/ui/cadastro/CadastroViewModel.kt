@@ -18,7 +18,7 @@ data class CadastroUiState(
     val nomeInput: String = "",
     val senhaInput: String = "",
     val descInput: String = "Fale um pouco sobre você.",
-    val isLoading: Boolean = false,
+    val carregando: Boolean = false,
     val error: String? = null,
     val cadastroSucesso: Boolean = false
 )
@@ -49,14 +49,14 @@ class CadastroViewModel(
             return
         }
 
-        _uiState.update { it.copy(isLoading = true, error = null) }
+        _uiState.update { it.copy(carregando = true, error = null) }
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val usuarioExistente = repository.buscarUsuarioPorNome(state.nomeInput)
                 if (usuarioExistente != null) {
-                    _uiState.update { it.copy(isLoading = false, error = "Nome de usuário já existe.") }
-                    return@launch // Sai da coroutine
+                    _uiState.update { it.copy(carregando = false, error = "Nome de usuário já existe.") }
+                    return@launch
                 }
 
                 val novoUsuario = Usuario(
@@ -66,10 +66,10 @@ class CadastroViewModel(
                 )
                 repository.inserirUsuario(novoUsuario)
 
-                _uiState.update { it.copy(isLoading = false, cadastroSucesso = true) }
+                _uiState.update { it.copy(carregando = false, cadastroSucesso = true) }
 
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = "Erro ao cadastrar: ${e.message}") }
+                _uiState.update { it.copy(carregando = false, error = "Erro ao cadastrar: ${e.message}") }
             }
         }
     }

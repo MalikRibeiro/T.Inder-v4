@@ -27,21 +27,23 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tinder.R
 import com.example.tinder.ui.login.Laranja
 import com.example.tinder.ui.theme.TinderTheme
-
-data class Perfil(val nome: String, val fotoResId: Int)
-
-private val listaDePerfis = listOf(
-    Perfil("Silvo, 60", R.drawable.h),
-    Perfil("Ludmila, 23", R.drawable.e),
-    Perfil("Neymar, 18", R.drawable.f),
-    Perfil("Careca, 32", R.drawable.g)
-)
+import com.example.tinder.ui.principal.PrincipalViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun TelaPrincipal(navController: NavController, usuario: String) {
-    var indiceAtual by remember { mutableStateOf(0) }
-    val perfilAtual = listaDePerfis[indiceAtual]
+    val viewModel: PrincipalViewModel = viewModel(factory = PrincipalViewModel.Factory)
+    val uiState by viewModel.uiState.collectAsState()
+    val perfilAtual = uiState.perfilAtual
     val context = LocalContext.current
+    LaunchedEffect(uiState.mensagemFeedback) {
+        if (uiState.mensagemFeedback != null) {
+            Toast.makeText(context, uiState.mensagemFeedback, Toast.LENGTH_SHORT).show()
+            viewModel.onMensagemMostrada() // Limpa o evento
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -71,54 +73,67 @@ fun TelaPrincipal(navController: NavController, usuario: String) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = perfilAtual.nome,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold
-        )
+        if (perfilAtual != null) {
+            Text(
+                text = perfilAtual.nome,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Image(
-            painter = painterResource(id = perfilAtual.fotoResId),
-            contentDescription = "Foto de ${perfilAtual.nome}",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .clip(RoundedCornerShape(16.dp))
-        )
+            Image(
+                painter = painterResource(id = perfilAtual.fotoResId),
+                contentDescription = "Foto de ${perfilAtual.nome}",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .clip(RoundedCornerShape(16.dp))
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(
-                colors = ButtonDefaults.buttonColors(Laranja),
-                onClick = {
-                    Toast.makeText(context, "Match cancelado com ${perfilAtual.nome}!", Toast.LENGTH_SHORT).show()
-                    indiceAtual = (indiceAtual + listaDePerfis.size - 1) % listaDePerfis.size
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Voltar",
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.White
-                )
-            }
-            Button(
-                colors = ButtonDefaults.buttonColors(Laranja),
-                onClick = {
-                    Toast.makeText(context, "Match com ${perfilAtual.nome}!", Toast.LENGTH_SHORT).show()
-                    indiceAtual = (indiceAtual + 1) % listaDePerfis.size
+                Button(
+                    colors = ButtonDefaults.buttonColors(Laranja),
+                    onClick = {
+                        viewModel.onVoltarPerfil()
+                        Toast.makeText(
+                            context,
+                            "Match cancelado com ${perfilAtual.nome}!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Voltar",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.White
+                    )
                 }
-            ) {
-                Text("\uD83E\uDD0D")
+                Button(
+                    colors = ButtonDefaults.buttonColors(Laranja),
+                    onClick = {
+                        viewModel.onProximoPerfil(match = true)
+                        Toast.makeText(
+                            context,
+                            "Match com ${perfilAtual.nome}!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                ) {
+                    Text("\uD83E\uDD0D")
+                }
             }
         }
+        else {
+                Text("Nenhum perfil disponível no momento.")
+            }
     }
 }
 

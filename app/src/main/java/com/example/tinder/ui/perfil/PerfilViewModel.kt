@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 data class PerfilUiState(
     val usuario: Usuario? = null,
     val bio: String = "",
-    val isLoading: Boolean = true,
+    val carregando: Boolean = true,
     val error: String? = null,
     val perfilExcluido: Boolean = false,
     val nomeUsuarioArg: String = ""
@@ -47,9 +47,9 @@ class PerfilViewModel(
     private fun carregarDadosUsuario() {
         viewModelScope.launch {
             repository.buscarUsuarioPorNomeFlow(nomeUsuario)
-                .onStart { _uiState.update { it.copy(isLoading = true, error = null) } }
+                .onStart { _uiState.update { it.copy(carregando = true, error = null) } }
                 .catch { e ->
-                    _uiState.update { it.copy(isLoading = false, error = "Erro ao carregar perfil: ${e.message}") }
+                    _uiState.update { it.copy(carregando = false, error = "Erro ao carregar perfil: ${e.message}") }
                 }
                 .collect { usuarioEncontrado ->
                     if (usuarioEncontrado != null) {
@@ -61,7 +61,7 @@ class PerfilViewModel(
                                 } else {
                                     currentState.bio
                                 },
-                                isLoading = false,
+                                carregando = false,
                                 error = null,
                                 perfilExcluido = false
                             )
@@ -69,7 +69,7 @@ class PerfilViewModel(
                     } else {
                         _uiState.update {
                             it.copy(
-                                isLoading = false,
+                                carregando = false,
                                 usuario = null, // Limpa o usuário
                                 error = it.error ?: "Usuário '$nomeUsuario' não encontrado.",
                             )
@@ -85,15 +85,15 @@ class PerfilViewModel(
     fun onSalvarBio() {
         val state = _uiState.value
         if (state.usuario != null && state.bio != state.usuario.desc) {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(carregando = true) }
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     val usuarioAtualizado = state.usuario.copy(desc = state.bio)
                     repository.atualizarUsuario(usuarioAtualizado)
-                    _uiState.update { it.copy(isLoading = false) }
+                    _uiState.update { it.copy(carregando = false) }
 
                 } catch (e: Exception) {
-                    _uiState.update { it.copy(isLoading = false, error = "Erro ao salvar bio: ${e.message}") }
+                    _uiState.update { it.copy(carregando = false, error = "Erro ao salvar bio: ${e.message}") }
                 }
             }
         }
@@ -102,13 +102,13 @@ class PerfilViewModel(
     fun onExcluirPerfil() {
         val state = _uiState.value
         if (state.usuario != null) {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(carregando = true) }
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     repository.deletarUsuario(state.usuario.id)
-                    _uiState.update { it.copy(isLoading = false, perfilExcluido = true, usuario = null) }
+                    _uiState.update { it.copy(carregando = false, perfilExcluido = true, usuario = null) }
                 } catch (e: Exception) {
-                    _uiState.update { it.copy(isLoading = false, error = "Erro ao excluir perfil: ${e.message}") }
+                    _uiState.update { it.copy(carregando = false, error = "Erro ao excluir perfil: ${e.message}") }
                 }
             }
         }

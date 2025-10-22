@@ -43,6 +43,12 @@ import com.example.tinder.ui.theme.TinderTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import com.example.tinder.data.repository.UsuarioRepository
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.size
 
 val Laranja = Color(0xFFFF5722)
 val Preto = Color(0xFF000000)
@@ -60,12 +66,34 @@ class TelaLogin : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaLogin(navController: NavController) {
-    var usuario by remember { mutableStateOf("") }
-    var senha by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val db = AppDatabase.getDatabase(context)
-    val usuarioDAO = db.usuarioDAO()
+    val repository = remember {
+        UsuarioRepository(AppDatabase.getDatabase(context).usuarioDAO())
+    }
+
+    val viewModel: LoginViewModel = viewModel(
+        factory = LoginViewModel.Factory(repository)
+    )
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(key1 = uiState.loginSucesso) {
+        if (uiState.loginSucesso) {
+            val nomeUsuario = uiState.nomeUsuarioLogado ?: ""
+
+            if (nomeUsuario.isNotBlank()) {
+                navController.navigate("tela_perfil/$nomeUsuario")
+                viewModel.onLoginNavegado()
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = uiState.error) {
+        if (uiState.error != null) {
+            Toast.makeText(context, uiState.error, Toast.LENGTH_SHORT).show()
+            viewModel.onErrorMostrado()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -81,8 +109,8 @@ fun TelaLogin(navController: NavController) {
             modifier = Modifier.padding(bottom = 32.dp)
         )
         OutlinedTextField(
-            value = usuario,
-            onValueChange = { usuario = it },
+            value = uiState.usuarioInput,
+            onValueChange = { viewModel.onUsuarioInputChange(it) },
             label = { Text("Usuário") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -97,8 +125,8 @@ fun TelaLogin(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = senha,
-            onValueChange = { senha = it },
+            value = uiState.senhaInput,
+            onValueChange = { viewModel.onSenhaInputChange(it) },
             label = { Text("Senha") },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation(),
@@ -114,19 +142,8 @@ fun TelaLogin(navController: NavController) {
 
         Spacer(modifier = Modifier.height(32.dp))
         Button(
-            onClick = {
-                scope.launch(Dispatchers.IO) {
-                    val usuarioLogado = usuarioDAO.buscarPorNomeESenha(usuario, senha)
-
-                    withContext(Dispatchers.Main) {
-                        if (usuarioLogado != null) {
-                            navController.navigate("tela_perfil/${usuarioLogado.nome}")
-                        } else {
-                            Toast.makeText(context, "Usuário ou senha inválidos!", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            },
+            onClick = { viewModel.onLoginClick() },
+            enabled = !uiState.carregando,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -136,25 +153,34 @@ fun TelaLogin(navController: NavController) {
             )
         )
         {
-            Text(text = "ENTRAR", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            if (uiState.carregando) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = Color.White
+                )
+            } else {
+                Text(text = "ENTRAR", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            }
         }
 
-        //Spacer(modifier = Modifier.height(100.dp))
-        TextButton(onClick = { navController.navigate("tela_cadastro") }) {
-            Text(text = "Cadastre-se")
-        }
+            //Spacer(modifier = Modifier.height(100.dp))
 
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Logo do app",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .padding(top = 32.dp),
-            contentScale = ContentScale.Fit
-        )
+            TextButton(onClick = { navController.navigate("tela_cadastro") }) {
+                Text(text = "Cadastre-se")
+            }
+
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo do app",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .padding(top = 32.dp),
+                contentScale = ContentScale.Fit
+            )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

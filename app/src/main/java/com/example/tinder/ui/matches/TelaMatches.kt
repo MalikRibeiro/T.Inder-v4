@@ -22,56 +22,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tinder.ui.login.Laranja
 import com.example.tinder.R
 import com.example.tinder.ui.theme.TinderTheme
-
-data class PerfilcomMatches(
-    val id: Int,
-    val nome: String,
-    val descricao: String,
-    val imageRes: Int,
-)
-
-private val mesmoPerfil = listOf(
-    PerfilcomMatches(
-        id = 1,
-        nome = "Ana, 24",
-        descricao = "Desenvolvedora de apps por profissão, aventureira por vocação. Em busca de alguém que tope maratonar séries e criar o próximo grande app juntos. 🤓✨",
-        imageRes = R.drawable.a
-    ),
-    PerfilcomMatches(
-        id = 2,
-        nome = "Rosana, 29",
-        descricao = "Engenheira de Machine Learning com uma paixão secreta por cafés coados e trilhas na natureza. Topa decifrar o algoritmo do amor comigo?",
-        imageRes = R.drawable.b
-    ),
-    PerfilcomMatches(
-        id = 3,
-        nome = "Beatriz, 22",
-        descricao = "Designer UX com a missão de tornar a vida mais fácil, uma interface de cada vez. Adoro museus, shows e encontrar beleza nas pequenas coisas.",
-        imageRes = R.drawable.c
-    ),
-    PerfilcomMatches(
-        id = 4,
-        nome = "Roberta, 31",
-        descricao = "Capturando a alma do mundo com minha câmera. Entre uma viagem e outra, estou sempre procurando um bom papo, uma risada e uma história para contar.",
-        imageRes = R.drawable.d
-    ),
-    PerfilcomMatches(
-        id = 5,
-        nome = "Ludmila, 26",
-        descricao = "Produtora musical nas horas vagas, busco uma sintonia perfeita. Se a vida fosse uma música, qual seria sua melodia favorita?",
-        imageRes = R.drawable.e
-    )
-)
+import com.example.tinder.ui.matches.MatchesViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaMatches(navController: NavController, usuario: String) {
-    var Pesquisa by remember { mutableStateOf("") }
+    val viewModel: MatchesViewModel = viewModel(factory = MatchesViewModel.Factory)
 
-    val ListaFiltro= mesmoPerfil.filter {
-        it.nome.contains(Pesquisa, ignoreCase = true) ||
-                it.descricao.contains(Pesquisa, ignoreCase = true)
-    }
+    val uiState by viewModel.uiState.collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -85,8 +46,8 @@ fun TelaMatches(navController: NavController, usuario: String) {
         ) {
 
             OutlinedTextField(
-                value = Pesquisa,
-                onValueChange = { Pesquisa = it },
+                value = uiState.termoBusca,
+                onValueChange = { viewModel.onBuscaChange(it) },
                 label = { Text("Buscar perfil...") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -105,7 +66,7 @@ fun TelaMatches(navController: NavController, usuario: String) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(ListaFiltro) { perfil ->
+                items(uiState.matchesFiltrados) { perfil ->
                     CardPerfil(perfil = perfil)
                 }
             }
@@ -114,7 +75,7 @@ fun TelaMatches(navController: NavController, usuario: String) {
 }
 
 @Composable
-fun CardPerfil(perfil: PerfilcomMatches) {
+fun CardPerfil(perfil: PerfilMatch) {
     val context = LocalContext.current
 
     Card(
