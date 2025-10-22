@@ -40,31 +40,31 @@ class MatchesViewModel : ViewModel() {
             PerfilMatch(
                 id = 1,
                 nome = "Ana, 24",
-                descricao = "Desenvolvedora de apps por profissão...",
+                descricao = "Desenvolvedora de apps por profissão só para ganhar dinheiro, porque não tem felicidade",
                 imageRes = R.drawable.a
             ),
             PerfilMatch(
                 id = 2,
                 nome = "Rosana, 29",
-                descricao = "Engenheira de Machine Learning...",
+                descricao = "Engenheira de Machine Learning, por esporte, porque o chatGPT faz tudo pra mim!",
                 imageRes = R.drawable.b
             ),
             PerfilMatch(
                 id = 3,
                 nome = "Beatriz, 22",
-                descricao = "Designer UX com a missão...",
+                descricao = "Designer UX com a missão de ser a única feliz no meio de tantos Nerds tristes",
                 imageRes = R.drawable.c
             ),
             PerfilMatch(
                 id = 4,
                 nome = "Roberta, 31",
-                descricao = "Capturando a alma do mundo...",
+                descricao = "Estudiosa de ADS com vontade de ganhar um emprego fantasma em uma prefeitura no meio do nada.",
                 imageRes = R.drawable.d
             ),
             PerfilMatch(
                 id = 5,
                 nome = "Ludmila, 26",
-                descricao = "Produtora musical nas horas vagas...",
+                descricao = "Produtora musical nas horas vagas...se o Adaime abrir o código ele vai excluir essa linha",
                 imageRes = R.drawable.e
             )
         )
