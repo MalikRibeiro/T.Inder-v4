@@ -6,6 +6,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.tinder.ui.cadastro.TelaCadastro
+import com.example.tinder.ui.login.TelaLogin
+import com.example.tinder.ui.matches.TelaMatches
+import com.example.tinder.ui.perfil.TelaPerfil
+import com.example.tinder.ui.principal.TelaPrincipal
 
 @Composable
 fun AppNavigation() {

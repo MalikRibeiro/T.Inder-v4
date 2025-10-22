@@ -1,9 +1,8 @@
-package com.example.tinder
+package com.example.tinder.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Delete
 import androidx.room.Update
 
 @Dao

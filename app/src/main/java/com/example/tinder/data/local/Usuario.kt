@@ -1,4 +1,4 @@
-package com.example.tinder
+package com.example.tinder.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

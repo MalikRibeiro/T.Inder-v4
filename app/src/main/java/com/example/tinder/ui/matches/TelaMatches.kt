@@ -1,4 +1,4 @@
-package com.example.tinder
+package com.example.tinder.ui.matches
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.tinder.ui.login.Laranja
+import com.example.tinder.R
 import com.example.tinder.ui.theme.TinderTheme
 
 data class PerfilcomMatches(

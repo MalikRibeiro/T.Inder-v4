@@ -1,6 +1,6 @@
 // Crie este novo arquivo: TelaCadastro.kt
 
-package com.example.tinder
+package com.example.tinder.ui.cadastro
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -16,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.tinder.data.local.AppDatabase
+import com.example.tinder.data.local.Usuario
+import com.example.tinder.ui.login.Laranja
 import com.example.tinder.ui.theme.TinderTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.example.tinder
+package com.example.tinder.ui.principal
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,13 +24,15 @@ import androidx.navigation.NavController
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.example.tinder.R
+import com.example.tinder.ui.login.Laranja
 import com.example.tinder.ui.theme.TinderTheme
 
 data class Perfil(val nome: String, val fotoResId: Int)
 
 private val listaDePerfis = listOf(
     Perfil("Silvo, 60", R.drawable.h),
-    Perfil("Ludmila, 23", R. drawable.e),
+    Perfil("Ludmila, 23", R.drawable.e),
     Perfil("Neymar, 18", R.drawable.f),
     Perfil("Careca, 32", R.drawable.g)
 )
